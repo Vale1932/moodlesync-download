@@ -59,7 +59,8 @@ main() {
     fail "Moodle Sync läuft nur auf Macs mit Apple-Chip (M1 oder neuer)." \
          "Bitte melde dich bei der Person, von der du deine Lizenz hast."
 
-  # Neustes Release über die GitHub-API finden (MSYNC_DMG_URL nur für den Test im Workflow)
+  # Neustes Release über die GitHub-API finden. MSYNC_DMG_URL (file://…): schon geladene .dmg –
+  # so ruft «Jetzt aktualisieren» in der App dieses Skript auf (app/updates.py), ebenso der Workflow-Test
   local info url version
   url="${MSYNC_DMG_URL:-}"
   if [ -z "$url" ]; then
