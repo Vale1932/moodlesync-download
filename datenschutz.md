@@ -1,6 +1,6 @@
 # Datenschutzerklärung – Sync for Moodle (Moodle Sync)
 
-Stand: 10. November 2026
+Stand: 13. November 2026
 
 Diese Erklärung gilt für die App «Sync for Moodle» aus dem Microsoft Store und für «Moodle Sync»
 (Installer für Windows und macOS). Kurz gesagt: **Deine Moodle-Dateien und deine Anmeldung bleiben
@@ -25,7 +25,14 @@ Kontakt: tschegsch@gmail.com
   Student). Die App sieht damit nur, was du in Moodle ohnehin sehen darfst.
 - Für diese Daten ist deine Hochschule verantwortlich. Es gelten ihre Datenschutzbestimmungen.
 
-### 2. Lizenzdienst (betrieben vom Verantwortlichen, gehostet bei Cloudflare)
+### 2. Lizenz
+
+**Store-Version:** Du kaufst die App im Microsoft Store. Den Kauf wickelt Microsoft ab, es gilt die
+Datenschutzerklärung von Microsoft. Ich erhalte dabei keine Zahlungsdaten. Die Store-Version nutzt den
+Lizenzdienst nicht.
+
+**Installer-Version (Windows und macOS):** Sie braucht einen Lizenzschlüssel und nutzt dafür einen
+eigenen Lizenzdienst (betrieben vom Verantwortlichen, gehostet bei Cloudflare):
 
 - **Beim Aktivieren** schickt die App den Lizenzschlüssel und eine **Gerätekennung**. Die
   Gerätekennung ist ein nicht umkehrbarer Hashwert (SHA-256) der Windows- bzw. Mac-Gerätenummer, die
