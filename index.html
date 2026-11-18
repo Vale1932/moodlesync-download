@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moodle Sync – deine Moodle-Dateien automatisch auf dem Computer</title>
+<meta name="description" content="Moodle Sync lädt die Dateien deiner Moodle-Kurse automatisch auf deinen Computer – sortiert nach Semester, Kurs und Abschnitt. Für Windows und Mac.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<style>
+  :root {
+    --bg: #f5f7fb; --card: #ffffff; --text: #1d2430; --muted: #5d6878; --line: #dfe4ec;
+    --accent: #1e66d0; --accent-hover: #1857bc; --accent-soft: #e8f0fd; --accent-text: #1858bf;
+    --shot-bg: linear-gradient(160deg, #e6effd, #c9dbf6);
+    --mac-window: #f6f6f6; --mac-line: #d9d9d9; --mac-side: #ececec;
+    --radius: 14px; --shadow: 0 1px 2px rgba(20, 40, 80, .06), 0 8px 24px rgba(20, 40, 80, .07);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12161c; --card: #1b2028; --text: #e7ebf1; --muted: #9aa5b4; --line: #2c333e;
+      --accent: #3b82f0; --accent-hover: #5a96f3; --accent-soft: #1d2a3f; --accent-text: #8ab4ff;
+      --shot-bg: linear-gradient(160deg, #1d2a3f, #16202f);
+      --mac-window: #2a2e35; --mac-line: #3a3f47; --mac-side: #23272d;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--accent-text); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+  section { padding: 56px 0; }
+  h1, h2, h3 { line-height: 1.2; margin: 0; }
+  h2 { font-size: clamp(26px, 4vw, 34px); letter-spacing: -.01em; }
+  p { margin: 0; }
+  .lead { color: var(--muted); font-size: 19px; }
+
+  /* Kopf */
+  header { padding: 20px 0; }
+  .brand { display: flex; align-items: center; gap: 12px; font-weight: 650; font-size: 19px; color: var(--text);
+           text-decoration: none; }
+  .brand img { width: 36px; height: 36px; }
+
+  /* Einstieg */
+  .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 48px; align-items: center; padding-top: 24px; }
+  .hero h1 { font-size: clamp(34px, 5.4vw, 52px); letter-spacing: -.02em; margin-bottom: 18px; }
+  .hero .lead { margin-bottom: 30px; max-width: 34em; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 12px;
+    font-weight: 600; text-decoration: none; border: 1px solid transparent; transition: background .15s, border-color .15s;
+  }
+  .btn svg { width: 22px; height: 22px; flex: none; }
+  .btn small { display: block; font-weight: 450; opacity: .85; font-size: 13px; line-height: 1.2; }
+  .btn span { line-height: 1.25; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--card); color: var(--text); border-color: var(--line); }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .note { color: var(--muted); font-size: 14px; margin-top: 14px; }
+  .shot { background: var(--shot-bg); border-radius: 22px; padding: 28px; }
+  .shot img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: var(--shadow); }
+
+  /* Vorteile */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card h3 { font-size: 18px; margin: 12px 0 6px; }
+  .card p { color: var(--muted); font-size: 15.5px; }
+  .icon { width: 40px; height: 40px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-text);
+          display: grid; place-items: center; }
+  .icon svg { width: 22px; height: 22px; }
+
+  /* Schritte */
+  .platform-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+  .platform-head svg { width: 34px; height: 34px; color: var(--text); }
+  .steps { list-style: none; padding: 0; margin: 32px 0 0; counter-reset: step; display: grid; gap: 16px; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+          display: grid; grid-template-columns: 44px 1fr; gap: 16px; counter-increment: step; }
+  .step::before {
+    content: counter(step); width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #fff;
+    display: grid; place-items: center; font-weight: 700; font-size: 19px;
+  }
+  .step h3 { font-size: 19px; margin-bottom: 6px; }
+  .step p, .step li { color: var(--muted); }
+  .step p + p { margin-top: 8px; }
+  .step ol { margin: 8px 0 0; padding-left: 20px; }
+  .step b, .step strong { color: var(--text); }
+  .path { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .path span { background: var(--accent-soft); color: var(--accent-text); padding: 2px 9px; border-radius: 7px;
+               font-size: 15px; font-weight: 550; }
+  .tip { margin-top: 12px; padding: 12px 14px; border-radius: 10px; background: var(--accent-soft); font-size: 15px;
+         color: var(--text); }
+
+  /* Skizzen von macOS (keine echten Screenshots) */
+  .sketch { margin-top: 16px; max-width: 520px; }
+  .sketch-label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .mac { background: var(--mac-window); border: 1px solid var(--mac-line); border-radius: 12px; box-shadow: var(--shadow);
+         overflow: hidden; font-size: 14px; color: var(--text); }
+  .mac-dialog { width: 280px; padding: 20px 18px 16px; text-align: center; }
+  .mac-dialog .appicon { width: 54px; height: 54px; margin: 0 auto 10px; display: block; }
+  .mac-dialog b { display: block; font-size: 14px; margin-bottom: 6px; }
+  .mac-dialog p { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .mac-btn { display: block; margin-top: 8px; padding: 5px 10px; border-radius: 7px; font-size: 13px;
+             background: var(--card); border: 1px solid var(--mac-line); }
+  .mac-btn.blue { background: #0a84ff; color: #fff; border-color: #0a84ff; }
+  .mac-settings { display: grid; grid-template-columns: 150px 1fr; min-height: 190px; }
+  .mac-side { background: var(--mac-side); padding: 12px 8px; border-right: 1px solid var(--mac-line); font-size: 12.5px; }
+  .mac-side div { padding: 4px 8px; border-radius: 6px; color: var(--muted); }
+  .mac-side .on { background: #0a84ff; color: #fff; }
+  .mac-main { padding: 14px 16px; font-size: 12.5px; }
+  .mac-main .title { font-weight: 650; font-size: 14px; margin-bottom: 10px; }
+  .mac-main .group { border: 1px solid var(--mac-line); border-radius: 8px; padding: 10px; background: var(--card); }
+  .mac-main .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+  .mac-main .row > span:first-child { flex: 1 1 170px; }
+  .mac-main .muted { color: var(--muted); }
+  .highlight { outline: 3px solid #ff9f0a; outline-offset: 2px; border-radius: 8px; }
+  .mac-main .mac-btn { display: inline-block; margin: 0; white-space: nowrap; }
+
+  /* Lizenz */
+  .price { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: center; }
+  .price-tag { font-size: 44px; font-weight: 750; letter-spacing: -.02em; }
+  .price-tag small { font-size: 17px; font-weight: 500; color: var(--muted); }
+  .checks { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; color: var(--muted); }
+  .checks li::before { content: "✓"; color: var(--accent-text); font-weight: 700; margin-right: 10px; }
+
+  /* Fragen */
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0 20px; }
+  details + details { margin-top: 10px; }
+  summary { cursor: pointer; padding: 16px 0; font-weight: 600; list-style: none; display: flex; justify-content: space-between;
+            gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--accent-text); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--muted); padding-bottom: 16px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  footer a { color: var(--muted); }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; }
+    .features { grid-template-columns: 1fr; }
+    .price { grid-template-columns: 1fr; }
+    section { padding: 40px 0; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    .btn { width: 100%; }
+    .step { grid-template-columns: 1fr; gap: 10px; padding: 18px; }
+    .shot { padding: 14px; border-radius: 16px; }
+    .mac-settings { grid-template-columns: 1fr; }
+    .mac-side { display: none; }
+    .mac-dialog { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="assets/icon.png" alt="" width="36" height="36">Moodle Sync</a>
+  </div>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div>
+      <h1>Deine Moodle-Dateien. Automatisch auf deinem Computer.</h1>
+      <p class="lead">Moodle Sync lädt die Folien, Übungen und Skripte all deiner Kurse herunter – sauber sortiert nach
+        Semester, Kurs und Abschnitt. Nie mehr jede Woche durch alle Kurse klicken.</p>
+      <div class="buttons">
+        <a class="btn btn-primary" href="https://apps.microsoft.com/detail/9NMH6G8F5XXF?hl=de-ch&amp;gl=CH">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5.5 10.5 4.4v7.1H3V5.5Zm8.5-1.25L21 3v8.5h-9.5V4.25ZM3 12.5h7.5v7.1L3 18.5v-6Zm8.5 0H21V21l-9.5-1.3v-7.2Z"/></svg>
+          <span>Für Windows<small>im Microsoft Store</small></span>
+        </a>
+        <a class="btn btn-secondary" href="#mac">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.4 3 2.4 1.2 0 1.6-.8 3.1-.8 1.4 0 1.8.8 3.1.8 1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.6-1-2.7-4.2ZM14.1 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg>
+          <span>Für Mac<small>Download und Anleitung</small></span>
+        </a>
+      </div>
+      <p class="note">Einmal kaufen, kein Abo: CHF 5. Für das Moodle der ETH Zürich voreingestellt.</p>
+    </div>
+    <div class="shot">
+      <img src="assets/app.webp" width="874" height="929"
+           alt="Das Fenster von Moodle Sync: Kursliste nach Semester, Knopf «Synchronisieren» und die Meldung «17 neue Dateien»">
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="was">
+    <h2 id="was">Was Moodle Sync für dich macht</h2>
+    <div class="features">
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/><path d="M12 11v5m-2.5-2.5L12 16l2.5-2.5"/></svg></div>
+        <h3>Alles an einem Ort</h3>
+        <p>Dateien, Textseiten und Forumsbeiträge landen in einem Ordner auf deinem Computer – geordnet wie in Moodle.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Jeden Tag von selbst</h3>
+        <p>Mit «Täglich automatisch» holt die App neue Dateien jeden Morgen und sagt dir, was neu ist.</p>
+      </div>
+      <div class="card">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>Deine Notizen sind sicher</h3>
+        <p>Bearbeitete Dateien werden nie überschrieben. Dein Passwort sieht die App nie, deine Dateien bleiben bei dir.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="mac" aria-labelledby="mac-titel">
+    <div class="platform-head">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.4 3 2.4 1.2 0 1.6-.8 3.1-.8 1.4 0 1.8.8 3.1.8 1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.6-1-2.7-4.2ZM14.1 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg>
+      <h2 id="mac-titel">So installierst du Moodle Sync auf dem Mac</h2>
+    </div>
+    <p class="lead">Dauert etwa drei Minuten. Du brauchst einen Mac mit Apple-Chip (M1 oder neuer) und einen
+      <a href="#lizenz">Lizenzschlüssel</a>.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <div>
+          <h3>App herunterladen</h3>
+          <p><a class="btn btn-primary" id="dmg" href="https://github.com/Vale1932/moodlesync-download/releases/latest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 20h14"/></svg>
+            <span id="dmg-label">Moodle Sync für Mac herunterladen</span></a></p>
+          <p>Die Datei landet in deinem Ordner <b>Downloads</b>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div>
+          <h3>In den Ordner «Programme» ziehen</h3>
+          <p>Öffne die heruntergeladene Datei <b>Moodle-Sync-….dmg</b> mit einem Doppelklick. Es erscheint ein Fenster:
+            Ziehe <b>Moodle Sync</b> auf den Ordner <b>Programme</b> daneben.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div>
+          <h3>Moodle Sync öffnen – macOS hält die App zuerst an</h3>
+          <p>Öffne den Ordner <b>Programme</b> und doppelklicke auf <b>Moodle Sync</b>. macOS meldet, es könne die App
+            nicht überprüfen. Das ist normal: Die App ist nicht bei Apple registriert. Klicke auf <b>Fertig</b>.</p>
+          <div class="sketch">
+            <div class="mac mac-dialog" aria-hidden="true">
+              <img class="appicon" src="assets/icon.png" alt="">
+              <b>„Moodle Sync“ wurde nicht geöffnet</b>
+              <p>Apple konnte nicht überprüfen, ob „Moodle Sync“ frei von Schadsoftware ist …</p>
+              <span class="mac-btn blue highlight">Fertig</span>
+              <span class="mac-btn">In den Papierkorb legen</span>
+            </div>
+            <p class="sketch-label">Skizze – so ähnlich sieht die Meldung aus.</p>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div>
+          <h3>In den Einstellungen erlauben</h3>
+          <p class="path"><span>Apple-Menü (oben links)</span>→<span>Systemeinstellungen</span>→<span>Datenschutz &amp; Sicherheit</span></p>
+          <p>Scrolle rechts ganz nach unten bis zum Abschnitt <b>Sicherheit</b>. Dort steht «„Moodle Sync“ wurde blockiert …».
+            Klicke daneben auf <b>Dennoch öffnen</b>.</p>
+          <div class="sketch">
+            <div class="mac mac-settings" aria-hidden="true">
+              <div class="mac-side">
+                <div>Allgemein</div><div>Erscheinungsbild</div><div>Bedienungshilfen</div>
+                <div class="on">Datenschutz &amp; Sicherheit</div><div>Schreibtisch &amp; Dock</div><div>Displays</div>
+              </div>
+              <div class="mac-main">
+                <div class="title">Datenschutz &amp; Sicherheit</div>
+                <div class="muted" style="margin-bottom:6px">Sicherheit</div>
+                <div class="group">
+                  <div class="muted" style="margin-bottom:8px">Apps erlauben, die geladen wurden von: App Store &amp; bekannten Entwicklern</div>
+                  <div class="row">
+                    <span>„Moodle Sync“ wurde blockiert, um deinen Mac zu schützen.</span>
+                    <span class="mac-btn highlight">Dennoch öffnen</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="sketch-label">Skizze – der Knopf steht ganz unten bei «Sicherheit».</p>
+          </div>
+          <div class="tip"><b>Kein Knopf zu sehen?</b> Er erscheint nur etwa eine Stunde lang nach dem Öffnungsversuch.
+            Öffne Moodle Sync einfach nochmals, klicke auf «Fertig» und schau gleich danach in den Einstellungen nach.</div>
+        </div>
+      </li>
+      <li class="step">
+        <div>
+          <h3>Bestätigen</h3>
+          <p>macOS fragt nochmals nach: Klicke auf <b>Dennoch öffnen</b> und bestätige mit deinem Passwort oder Touch ID.
+            Das musst du nur dieses eine Mal machen – ab jetzt startet Moodle Sync ganz normal.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div>
+          <h3>Loslegen</h3>
+          <ol>
+            <li>Füge deinen <b>Lizenzschlüssel</b> ein – die ganze Nachricht geht auch – und klicke auf <b>Aktivieren</b>.</li>
+            <li>Klicke auf <b>Im Browser anmelden</b> und melde dich wie gewohnt bei Moodle an. Fragt der Browser, ob er
+              Moodle Sync öffnen darf: <b>Erlauben</b>.</li>
+            <li>Kurse anhaken und <b>Synchronisieren</b>. Mit <b>Täglich automatisch</b> kommen neue Dateien jeden Morgen
+              von selbst.</li>
+          </ol>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap" id="lizenz" aria-labelledby="lizenz-titel">
+    <div class="card price">
+      <div>
+        <h2 id="lizenz-titel">Lizenz für den Mac</h2>
+        <ul class="checks">
+          <li>Einmal bezahlen, kein Abo</li>
+          <li>Bezahlung per TWINT</li>
+          <li>Ein Schlüssel gilt für einen Mac, Updates inklusive</li>
+        </ul>
+      </div>
+      <div>
+        <div class="price-tag">CHF 5 <small>einmalig</small></div>
+        <p class="note" style="margin:6px 0 16px">Schreib mir kurz – du bekommst die TWINT-Angaben und nach der Zahlung
+          deinen Schlüssel.</p>
+        <a class="btn btn-primary" href="mailto:tschegsch@gmail.com?subject=Lizenz%20f%C3%BCr%20Moodle%20Sync%20(Mac)&amp;body=Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac.%0A%0AMein%20Name%3A%20">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <span>Lizenz anfragen</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="fragen">
+    <h2 id="fragen" style="margin-bottom:24px">Fragen</h2>
+    <details>
+      <summary>Welche Hochschulen funktionieren?</summary>
+      <p>Voreingestellt ist das Moodle der ETH Zürich. Andere Hochschulen funktionieren, wenn ihr Moodle die Anmeldung
+        über die offizielle Moodle-App erlaubt – die Adresse gibst du beim Anmelden ein.</p>
+    </details>
+    <details>
+      <summary>«Dieser Schlüssel ist schon auf einem anderen Gerät aktiv»</summary>
+      <p>Ein Schlüssel funktioniert auf genau einem Mac. Für einen neuen Computer schreib mir kurz, dann gebe ich ihn frei.</p>
+    </details>
+    <details>
+      <summary>Die tägliche Automatik läuft nicht</summary>
+      <p>Liegt dein Moodle-Ordner in «Dokumente» oder auf dem Schreibtisch, braucht Moodle Sync eine Freigabe:
+        Systemeinstellungen → Datenschutz &amp; Sicherheit → Festplattenvollzugriff → Moodle Sync einschalten.</p>
+    </details>
+    <details>
+      <summary>Wie bekomme ich Updates?</summary>
+      <p>In Moodle Sync unten auf «Nach Updates suchen» klicken. Gibt es eine neue Version, oben auf «Jetzt aktualisieren» –
+        Lizenz und Einstellungen bleiben erhalten. Unter Windows kommen Updates automatisch über den Microsoft Store.</p>
+    </details>
+    <details>
+      <summary>Geht es auch auf einem Mac mit Intel-Prozessor?</summary>
+      <p>Leider nein, Moodle Sync läuft nur auf Macs mit Apple-Chip (M1 oder neuer) ab macOS 11.</p>
+    </details>
+    <details>
+      <summary>Ist das eine offizielle App von Moodle?</summary>
+      <p>Nein. Moodle Sync ist ein unabhängiges Projekt von Studierenden für Studierende. «Moodle» ist eine eingetragene
+        Marke von Moodle Pty Ltd.</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 VLTN Apps · Zürich</span>
+    <span>
+      <a href="https://github.com/Vale1932/moodlesync-download/blob/main/datenschutz.md">Datenschutz</a> ·
+      <a href="mailto:tschegsch@gmail.com">Kontakt</a> ·
+      <a href="https://github.com/Vale1932/moodlesync-download/releases/latest">Alle Downloads</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  // Direkter Link auf die neuste .dmg (der Dateiname enthält die Version). Klappt das nicht, bleibt der Link auf
+  // die Download-Seite bei GitHub – dort liegt die Datei auch.
+  fetch("https://api.github.com/repos/Vale1932/moodlesync-download/releases/latest")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel || !rel.assets) return;
+      var dmg = rel.assets.find(function (a) { return /\.dmg$/i.test(a.name); });
+      if (!dmg) return;
+      document.getElementById("dmg").href = dmg.browser_download_url;
+      var version = String(rel.tag_name || "").replace(/^v/, "");
+      if (version) document.getElementById("dmg-label").textContent = "Moodle Sync " + version + " für Mac herunterladen";
+    })
+    .catch(function () {});
+</script>
+</body>
+</html>
