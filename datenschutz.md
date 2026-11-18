@@ -1,6 +1,6 @@
 # Datenschutzerklärung – Sync for Moodle (Moodle Sync)
 
-Stand: 13. November 2026
+Stand: 18. November 2026
 
 Diese Erklärung gilt für die App «Sync for Moodle» aus dem Microsoft Store und für «Moodle Sync»
 (Installer für Windows und macOS). Kurz gesagt: **Deine Moodle-Dateien und deine Anmeldung bleiben
@@ -55,6 +55,14 @@ eigenen Lizenzdienst (betrieben vom Verantwortlichen, gehostet bei Cloudflare):
 - **Installer-Version:** Höchstens einmal pro Tag lädt die App eine kleine Datei mit der neusten
   Versionsnummer von GitHub. Erst wenn du «Jetzt aktualisieren» klickst, lädt sie den neuen
   Installer herunter. Dabei sieht GitHub deine IP-Adresse (siehe Datenschutzerklärung von GitHub).
+
+### 4. Download-Seite
+
+Die Download-Seite (https://vale1932.github.io/moodlesync-download) liegt bei GitHub Pages. Beim Aufruf
+sieht GitHub deine IP-Adresse (siehe Datenschutzerklärung von GitHub). Die Seite fragt bei GitHub nach,
+welche Mac-Version die neuste ist. Sie setzt keine Cookies und enthält keine Werbung und kein Tracking.
+Schreibst du mir über «Lizenz anfragen» eine E-Mail, verwende ich deine Angaben nur, um dir die Lizenz zu
+schicken.
 
 ## Was auf deinem Computer bleibt
 
