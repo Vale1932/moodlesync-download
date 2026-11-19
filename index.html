@@ -200,6 +200,11 @@
   .plan h3 { font-size: 19px; margin-bottom: 4px; }
   .plan p { color: var(--muted); font-size: 15.5px; }
   .plan .btn { margin-top: 14px; }
+  .mail-alt { margin-top: 12px; font-size: 14px; color: var(--muted); }
+  .mail-alt b { color: var(--text); font-weight: 650; user-select: all; -webkit-user-select: all; word-break: break-all; }
+  .link-btn { background: none; border: 0; padding: 0; font: inherit; font-weight: 650; color: var(--accent-text);
+              text-decoration: underline; cursor: pointer; }
+  .mail-ok { color: var(--new); font-weight: 650; }
   .plan .os { width: 44px; height: 44px; border-radius: 12px; background: var(--bg-soft); border: 1px solid var(--line);
               display: grid; place-items: center; }
   .plan .os svg { width: 24px; height: 24px; }
@@ -508,9 +513,12 @@
             <h3>Mac mit Apple-Chip</h3>
             <p><span class="promo">Bis 31.12. CHF 2.50, </span>Bezahlung per TWINT. Schreib mir kurz – du bekommst die TWINT-Angaben und nach der Zahlung deinen
               Lizenzschlüssel. Ein Schlüssel gilt für einen Mac.</p>
-            <a class="btn btn-secondary" href="mailto:tschegsch@gmail.com?subject=Lizenz%20f%C3%BCr%20Moodle%20Sync%20(Mac)&amp;body=Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac.%0A%0AMein%20Name%3A%20">
+            <a class="btn btn-secondary" id="mail-lizenz" href="mailto:tschegsch@gmail.com?subject=Lizenz%20f%C3%BCr%20Moodle%20Sync%20(Mac)&amp;body=Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac%20%28Einf%C3%BChrungspreis%20CHF%202.50%29.%0A%0AMein%20Name%3A%20">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
               <span>Lizenz anfragen</span></a>
+            <p class="mail-alt">Mailprogramm öffnet sich nicht? Schreib an <b>tschegsch@gmail.com</b> ·
+              <button class="link-btn js-copy-mail" type="button">Adresse kopieren</button>
+              <span class="mail-ok" aria-live="polite"></span></p>
           </div>
         </div>
       </div>
@@ -712,7 +720,11 @@
     var PAGE = "https://vale1932.github.io/moodlesync-download/";
     var root = document.documentElement;
     var PROMO_END = Date.parse("2027-01-01T00:00:00+01:00");
-    if (Date.now() >= PROMO_END) root.setAttribute("data-promo", "aus");
+    if (Date.now() >= PROMO_END) {
+      root.setAttribute("data-promo", "aus");
+      var ml = document.getElementById("mail-lizenz");
+      if (ml) ml.setAttribute("href", ml.getAttribute("href").replace("Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac%20%28Einf%C3%BChrungspreis%20CHF%202.50%29.%0A%0AMein%20Name%3A%20", "Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac%20%28CHF%205%29.%0A%0AMein%20Name%3A%20"));
+    }
 
     // Gerät erkennen: Handy/Tablet → Link für den Laptop anbieten; Mac → Mac zuerst zeigen.
     // (iPads melden sich als «Macintosh», haben aber einen Touchscreen.)
@@ -765,6 +777,25 @@
           navigator.share({ title: "Moodle Sync", text: "Moodle Sync auf dem Laptop installieren:", url: PAGE })
             .catch(function (e) { if (e && e.name !== "AbortError") mail(); });
         } else { mail(); }
+      });
+    });
+    function copyText(text, ok, fail) {
+      var old = function () {             // ältere Browser oder keine Erlaubnis: über ein unsichtbares Textfeld
+        var t = document.createElement("textarea");
+        t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+        document.body.appendChild(t); t.select();
+        var done = false; try { done = document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(t);
+        if (done) ok(); else fail();
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, old);
+      else old();
+    }
+    document.querySelectorAll(".js-copy-mail").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var out = b.parentNode.querySelector(".mail-ok");
+        copyText("tschegsch@gmail.com", function () { out.textContent = "Kopiert ✓"; },
+                 function () { out.textContent = "Bitte die Adresse markieren und kopieren."; });
       });
     });
     document.querySelectorAll(".js-copy").forEach(function (b) {
