@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Moodle Sync – nie mehr Moodle durchklicken</title>
-<meta name="description" content="Moodle Sync lädt Folien, Übungen und Skripte all deiner Moodle-Kurse automatisch auf deinen Computer – sortiert nach Semester, Kurs und Abschnitt. Für Windows und Mac, CHF 5 einmalig.">
+<meta name="description" content="Moodle Sync lädt Folien, Übungen und Skripte all deiner Moodle-Kurse automatisch auf deinen Computer – sortiert nach Semester, Kurs und Abschnitt. Für Windows und Mac, einmal kaufen, kein Abo.">
 <meta name="theme-color" content="#1e66d0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#12161c" media="(prefers-color-scheme: dark)">
 <!-- Vorschau, wenn jemand den Link in WhatsApp, Teams oder Mail teilt -->
@@ -12,7 +12,7 @@
 <meta property="og:locale" content="de_CH">
 <meta property="og:site_name" content="Moodle Sync">
 <meta property="og:title" content="Moodle Sync – nie mehr Moodle durchklicken">
-<meta property="og:description" content="Alle Folien, Übungen und Skripte deiner Moodle-Kurse automatisch auf deinem Laptop. Für Windows und Mac, CHF 5 einmalig.">
+<meta property="og:description" content="Alle Folien, Übungen und Skripte deiner Moodle-Kurse automatisch auf deinem Laptop. Für Windows und Mac, einmal kaufen, kein Abo.">
 <meta property="og:url" content="https://vale1932.github.io/moodlesync-download/">
 <meta property="og:image" content="https://vale1932.github.io/moodlesync-download/assets/vorschau.png">
 <meta property="og:image:width" content="1200">
@@ -64,6 +64,20 @@
   .lead { color: var(--muted); font-size: 19px; }
   .center { text-align: center; }
   .center .lead { max-width: 36em; margin: 12px auto 0; }
+
+  /* Einführungspreis: nach dem Enddatum blendet das Skript unten alles mit .promo aus und .regular ein */
+  .regular, .facts li.regular { display: none; }
+  [data-promo="aus"] .promo { display: none !important; }
+  [data-promo="aus"] .regular { display: revert; }
+  [data-promo="aus"] .facts li.regular { display: flex; }
+  .promo-bar { background: var(--navy); color: #fff; text-align: center; font-size: 15px; padding: 9px 16px;
+               line-height: 1.35; }
+  .promo-bar b { color: #ffc53d; }
+  .promo-bar a { color: #fff; font-weight: 650; white-space: nowrap; }
+  .promo-badge { display: inline-block; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+                 color: #0b2552; background: #ffc53d; border-radius: 99px; padding: 5px 12px; }
+  .was { font-size: .42em; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+  .was s { text-decoration-thickness: 2px; }
 
   /* Kopf */
   header { padding: 16px 0; }
@@ -308,6 +322,9 @@
 </head>
 <body>
 
+<div class="promo promo-bar">Einführungspreis: <b>CHF 2.50 statt CHF 5</b> – nur bis 31. Dezember.
+  <a href="#preis">Zum Angebot →</a></div>
+
 <header>
   <div class="wrap">
     <a class="brand" href="#"><img src="assets/icon.png" alt="" width="34" height="34">Moodle Sync</a>
@@ -357,7 +374,8 @@
       </div>
 
       <ul class="facts">
-        <li>CHF 5 einmalig, kein Abo</li>
+        <li class="promo">Bis 31.12. nur CHF 2.50 statt 5</li>
+        <li class="regular">CHF 5 einmalig, kein Abo</li>
         <li>Windows 10/11 und Mac</li>
         <li>Dein Passwort sieht die App nie</li>
       </ul>
@@ -456,8 +474,11 @@
       <div>
         <p class="kicker">Preis</p>
         <h2 id="preis-titel">Einmal zahlen. Kein Abo.</h2>
-        <div class="price-tag">CHF 5 <small>einmalig</small></div>
-        <p class="lead">Weniger als ein Mensa-Menü.</p>
+        <p class="promo" style="margin-top:16px"><span class="promo-badge">Einführungspreis bis 31. Dezember</span></p>
+        <div class="price-tag promo">CHF 2.50 <span class="was">statt <s>CHF 5</s></span></div>
+        <p class="lead promo">Halber Preis – nur bis Ende Jahr. Danach CHF 5.</p>
+        <div class="price-tag regular">CHF 5 <small>einmalig</small></div>
+        <p class="lead regular">Weniger als ein Mensa-Menü.</p>
         <ul class="checks">
           <li>Keine Werbung, kein Tracking</li>
           <li>Updates inklusive</li>
@@ -480,7 +501,7 @@
           <div class="os"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.7 2.4 3 2.4 1.2 0 1.6-.8 3.1-.8 1.4 0 1.8.8 3.1.8 1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.6-1-2.7-4.2ZM14.1 5.8c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.1 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg></div>
           <div>
             <h3>Mac mit Apple-Chip</h3>
-            <p>Bezahlung per TWINT. Schreib mir kurz – du bekommst die TWINT-Angaben und nach der Zahlung deinen
+            <p><span class="promo">Bis 31.12. CHF 2.50, </span>Bezahlung per TWINT. Schreib mir kurz – du bekommst die TWINT-Angaben und nach der Zahlung deinen
               Lizenzschlüssel. Ein Schlüssel gilt für einen Mac.</p>
             <a class="btn btn-secondary" href="mailto:tschegsch@gmail.com?subject=Lizenz%20f%C3%BCr%20Moodle%20Sync%20(Mac)&amp;body=Hallo%2C%0A%0Aich%20m%C3%B6chte%20eine%20Lizenz%20f%C3%BCr%20Moodle%20Sync%20auf%20meinem%20Mac.%0A%0AMein%20Name%3A%20">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
@@ -643,7 +664,8 @@
   <section class="wrap" aria-labelledby="schluss-titel">
     <div class="final">
       <h2 id="schluss-titel">Spar dir das Durchklicken – ab heute.</h2>
-      <p>In wenigen Minuten eingerichtet. Ab morgen früh liegen neue Unterlagen schon auf deinem Computer.</p>
+      <p>In wenigen Minuten eingerichtet. Ab morgen früh liegen neue Unterlagen schon auf deinem Computer.
+        <span class="promo"><br><b style="color:#ffc53d">Bis 31. Dezember für CHF 2.50 statt CHF 5.</b></span></p>
       <div class="buttons">
         <button class="btn btn-light js-share only-mobile" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>
@@ -684,6 +706,8 @@
   (function () {
     var PAGE = "https://vale1932.github.io/moodlesync-download/";
     var root = document.documentElement;
+    var PROMO_END = Date.parse("2027-01-01T00:00:00+01:00");
+    if (Date.now() >= PROMO_END) root.setAttribute("data-promo", "aus");
 
     // Gerät erkennen: Handy/Tablet → Link für den Laptop anbieten; Mac → Mac zuerst zeigen.
     // (iPads melden sich als «Macintosh», haben aber einen Touchscreen.)
