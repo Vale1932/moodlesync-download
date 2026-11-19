@@ -117,6 +117,8 @@
              font-weight: 750; }
   .hero h1 .mark { color: var(--accent-text); }
   .hero .lead { margin-bottom: 28px; max-width: 32em; }
+  .store-web { display: none; margin-top: 10px; font-size: 14px; color: var(--muted); }
+  [data-os="win"] .store-web { display: block; }
   .facts { list-style: none; padding: 0; margin: 18px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px;
            color: var(--muted); font-size: 15px; }
   .facts li { display: flex; align-items: center; gap: 6px; }
@@ -372,6 +374,9 @@
         </div>
         <p class="copied" aria-live="polite"></p>
       </div>
+
+      <p class="store-web">Öffnet sich der Store nicht?
+        <a href="https://apps.microsoft.com/detail/9NMH6G8F5XXF?hl=de-ch&amp;gl=CH">Im Browser ansehen</a></p>
 
       <ul class="facts">
         <li class="promo">Bis 31.12. nur CHF 2.50 statt 5</li>
@@ -717,6 +722,14 @@
            : /Macintosh|Mac OS X/.test(ua) ? "mac"
            : /Windows/.test(ua) ? "win" : "other";
     root.setAttribute("data-os", os);
+
+    // Unter Windows öffnen die Store-Knöpfe direkt die App «Microsoft Store» statt der Store-Website.
+    // Ohne Skript oder auf anderen Geräten bleibt der Link auf apps.microsoft.com.
+    if (os === "win") {
+      document.querySelectorAll('a[href^="https://apps.microsoft.com/detail/9NMH6G8F5XXF"]').forEach(function (a) {
+        if (!a.closest(".store-web")) a.href = "ms-windows-store://pdp/?ProductId=9NMH6G8F5XXF";
+      });
+    }
 
     var guide = document.getElementById("mac-anleitung");
     if (os === "mobile") {
